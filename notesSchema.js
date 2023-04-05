@@ -23,5 +23,5 @@ const notesSchema = new mongoose.Schema({
 
 });
 
-const qpaperModel=mongoose.model('Notes',notesSchema);
-module.exports=qpaperModel;
+const notesModel=mongoose.model('Notes',notesSchema);
+module.exports=notesModel;

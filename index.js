@@ -333,12 +333,12 @@ app.get('/qpaper/:_id', async (req, resp) => {
 //=============================================================================================
 
 //Excel file
-const workbook = xlsx.readFile('Book1.xlsx');
-const sheet = workbook.Sheets['Sheet1'];
-let data = xlsx.utils.sheet_to_json(sheet);
-// console.log(data);
-let keys=Object.keys(data[0]);
-console.log(keys);
+// const workbook = xlsx.readFile('Book1.xlsx');
+// const sheet = workbook.Sheets['Sheet1'];
+// let data = xlsx.utils.sheet_to_json(sheet);
+// // console.log(data);
+// let keys=Object.keys(data[0]);
+// console.log(keys);
 
 // data.forEach(calAvg)
 // data.forEach(print);
@@ -378,6 +378,6 @@ console.log(keys);
 
 
 
-// app.listen(port, () => {
-//     console.log(`Running on port ${port}`);
-// });
+app.listen(port, () => {
+    console.log(`Running on port ${port}`);
+});

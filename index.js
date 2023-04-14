@@ -11,7 +11,23 @@ const assignmentModel = require('./assignmentSchema.js')
 const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2;
 const app = express();
+
+
+
+//server listening
+//============================================
+const http=require('http');
+const server=http.createServer(app);
+server.on("listening",()=>{
+    console.log(`listening to port ${port}`);
+})
 const port = 9000;
+server.listen(port);
+//================================================
+
+
+
+
 
 app.use(fileUpload({
     useTempFiles: true
@@ -24,7 +40,7 @@ cloudinary.config({
     cloud_name: process.env.CLOUDINARY_USER_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+}) 
 //-----------------------------------------------------------------------------------------
 
 //Get Api--------------------------------------------------------
@@ -51,7 +67,6 @@ app.get('/search/:key', async (req, resp) => {
 
 //Post Api-----------------------------------------------------------------------
 app.post('/teacher', async (req, resp) => {
-    //figure it out-----------------------------------------------
     const file = req.files.profilepic;
     cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         const data = new teacherModel(
@@ -223,14 +238,15 @@ app.post('/assignment', async (req, resp) => {
 
 })
 
-app.delete('/assignment/:_id', async (req, resp) => {
-    const data = await assignmentModel.find(req.params);
-    const imageUrl = data[0].file_path;
+app.delete('/assignment/:id', async (req, resp) => {
+    const data = await assignmentModel.findById(req.params.id);
+    console.log(data);
+    const imageUrl = data.file_path;
     const urlArray = imageUrl.split('/');
     const image = urlArray[urlArray.length - 1];
     const imageName = image.split('.')[0];
 
-    assignmentModel.deleteOne(req.params).then(() => {
+    assignmentModel.deleteOne({_id:req.params.id}).then(() => {
         cloudinary.uploader.destroy(imageName, (error, result) => {
             resp.send(result);
         }).catch((error) => {
@@ -241,9 +257,9 @@ app.delete('/assignment/:_id', async (req, resp) => {
     })
 })
 
-app.get('/assignment/:_id', async (req, resp) => {
-    const data = await assignmentModel.find(req.params);
-    const imagePath = data[0].file_path;
+app.get('/assignment/:id', async (req, resp) => {
+    const data = await assignmentModel.findById(req.params.id);
+    const imagePath = data.file_path;
     resp.send(imagePath);
 })
 
@@ -356,28 +372,11 @@ app.get('/qpaper/:_id', async (req, resp) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //-----------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------
 
 
 
-app.listen(port, () => {
-    console.log(`Running on port ${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Running on port ${port}`);
+// });
